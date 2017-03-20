@@ -48,7 +48,7 @@ app.listen(process.env.PORT || 3000, () => {
   console.log("INFO: app is listening on port: " + (process.env.PORT || 3000));
 });
 
-app.post("/webhook_callback", function(req, res) {
+app.post("/create_space", function(req, res) {
   console.log("TESTBB!");
   return;
 };
