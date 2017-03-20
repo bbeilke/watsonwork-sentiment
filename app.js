@@ -62,44 +62,6 @@ app.post("/createSpace", function(req, res) {
     }
   };
 
-  request(authenticationOptions, function(err, response, authenticationBody) {
-
-    // If successful authentication, a 200 response code is returned
-    if (response.statusCode !== 200) {
-        // if our app can't authenticate then it must have been disabled.  Just return
-        console.log("ERROR: App can't authenticate");
-        return;
-    }
-    const accessToken = JSON.parse(authenticationBody).access_token;
-
-    const GraphQLOptions = {
-        "url": `${WWS_URL}/graphql`,
-        "headers": {
-            "Content-Type": "application/graphql",
-            "x-graphql-view": "PUBLIC",
-            "jwt": "${jwt}"
-        },
-        "method": "POST",
-        "body": ""
-    };
-
-    GraphQLOptions.headers.jwt = accessToken;
-    // GraphQLOptions.body = "{ message (id: \"" + messageId + "\") {createdBy { displayName id}}}";
-    GraphQLOptions.body = "query getSpaceId{spaces(first:5){items{id title}}}";
-
-    request(GraphQLOptions, function(err, response, graphqlbody) {
-
-      if (!err && response.statusCode === 200) {
-          const bodyParsed = JSON.parse(graphqlbody);
-          console.log(bodyParsed);
-          console.log(bodyParsed.data.spaces.id(0));
-
-      } else {
-          console.log("ERROR: Can't retrieve " + GraphQLOptions.body + " status:" + response.statusCode);
-          return;
-      }
-};
-
 app.post("/webhook_callback", function(req, res) {
 
 
