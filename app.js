@@ -92,7 +92,7 @@ app.get("/create_space", function(req, res) {
           console.log("TestBB: " + graphqlbody);
           const bodyParsed = JSON.parse(graphqlbody);
           console.log("TestBB: " + bodyParsed);
-          console.log("TestBB: " + bodyParsed.data.spaces(0).title;);
+        //  console.log("TestBB: " + bodyParsed.data.spaces(0).title;);
 
       } else {
           console.log("ERROR: Can't retrieve " + GraphQLOptions.body + " status:" + response.statusCode);
