@@ -49,6 +49,11 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 app.post("/webhook_callback", function(req, res) {
+  console.log("TESTBB!");
+  return;
+};
+
+app.post("/webhook_callback", function(req, res) {
 
 
   if (!APP_ID || !APP_SECRET || !WEBHOOK_SECRET) {
