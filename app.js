@@ -49,8 +49,58 @@ app.listen(process.env.PORT || 3000, () => {
 });
 
 app.get("/create_space", function(req, res) {
-  	console.log("TESTBB");
-  	return;
+  // Build request options for authentication.
+  const authenticationOptions = {
+    "method": "POST",
+    "url": `${WWS_URL}${AUTHORIZATION_API}`,
+    "auth": {
+        "user": APP_ID,
+        "pass": APP_SECRET
+    },
+    "form": {
+        "grant_type": "client_credentials"
+    }
+  };
+
+  request(authenticationOptions, function(err, response, authenticationBody) {
+
+    // If successful authentication, a 200 response code is returned
+    if (response.statusCode !== 200) {
+        // if our app can't authenticate then it must have been disabled.  Just return
+        console.log("ERROR: App can't authenticate");
+        return;
+    }
+    const accessToken = JSON.parse(authenticationBody).access_token;
+
+    const GraphQLOptions = {
+        "url": `${WWS_URL}/graphql`,
+        "headers": {
+            "Content-Type": "application/graphql",
+            "x-graphql-view": "PUBLIC",
+            "jwt": "${jwt}"
+        },
+        "method": "POST",
+        "body": ""
+    };
+
+    GraphQLOptions.headers.jwt = accessToken;
+    GraphQLOptions.body = "query getSpaceId{spaces(first:5){items{id title}}}";
+
+    request(GraphQLOptions, function(err, response, graphqlbody) {
+
+      if (!err && response.statusCode === 200) {
+          console.log("TestBB: " + graphqlbody);
+          const bodyParsed = JSON.parse(graphqlbody);
+          console.log("TestBB: " + bodyParsed);
+          console.log("TestBB: " + bodyParsed.data.spaces(0).title;);
+
+      } else {
+          console.log("ERROR: Can't retrieve " + GraphQLOptions.body + " status:" + response.statusCode);
+          return;
+      }
+
+    });
+  });
 });
 
 app.post("/webhook_callback", function(req, res) {
